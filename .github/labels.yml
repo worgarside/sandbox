@@ -12,7 +12,7 @@
     description: PR for a new release
     color: "C30AC6"
 
-  - name: github_actions
+  - name: github-actions
     description: Pull requests that update GitHub Actions code
     color: "000000"
 
