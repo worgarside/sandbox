@@ -1,0 +1,36 @@
+---
+  # yamllint disable rule:indentation
+  - name: "bug"
+    color: "D73A4A"
+    description: "Something isn't working"
+
+  - name: tools
+    color: "414141"
+    description: "PR for updating the tools used in this repo"
+
+  - name: release
+    description: PR for a new release
+    color: "C30AC6"
+
+  - name: github_actions
+    description: Pull requests that update GitHub Actions code
+    color: "000000"
+
+  - name: dependencies
+    description: Pull requests that update a dependency file
+    color: "0366D6"
+
+  - name: python
+    description: Pull requests that update Python code
+    color: "2b67c6"
+
+  - name: sync
+    color: "EDEDED"
+
+  - name: enhancement
+    description: New feature or request
+    color: "A2EEEF"
+
+  - name: tests
+    description: Pull requests that update tests
+    color: "0E8A16"
