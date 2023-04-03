@@ -34,3 +34,15 @@
   - name: tests
     description: Pull requests that update tests
     color: "0E8A16"
+
+  - name: major
+    description: "A major release"
+    color: "FF0000"
+
+  - name: minor
+    description: "A minor release"
+    color: "FFA500"
+
+  - name: patch
+    description: "A patch release"
+    color: "FFFF00"

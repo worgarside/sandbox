@@ -1,5 +1,5 @@
 ---
-name: Update Repo Labels
+name: Manage Repo Labels
 
 # yamllint disable-line rule:truthy
 on:
@@ -9,6 +9,7 @@ on:
     paths:
       - '.github/labels.yml'
       - '.github/workflows/labels.yml'
+  workflow_dispatch:
 
 jobs:
   labeler:
