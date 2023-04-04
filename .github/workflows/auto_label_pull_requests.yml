@@ -6,9 +6,12 @@ on:
   pull_request:
     types:
       - opened
+      - ready_for_review
+
 
 jobs:
   set_release_label:
+    # If a new PR is raised against `main`, then label it with the correct release label
     name: Set Release Label
     runs-on: ubuntu-latest
     if: ${{ github.base_ref == 'refs/heads/main' }}
