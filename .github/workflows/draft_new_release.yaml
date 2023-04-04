@@ -24,7 +24,7 @@ jobs:
         id: derive-label
         run: |
           new_release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
-          latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1) || "0.0.0"
+          latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1)
 
           if ! [[ $new_release_number =~ ^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}$ ]]
           then
@@ -33,6 +33,11 @@ jobs:
           else
             echo "new-release-number=$new_release_number" >> $GITHUB_OUTPUT
             echo "latest-release=$latest_release" >> $GITHUB_OUTPUT
+          fi
+
+          if [ -z "$latest_release" ]
+          then
+            latest_release="0.0.0"
           fi
 
           if [ "${new_release_number%%.*}" != "${latest_release%%.*}" ]
