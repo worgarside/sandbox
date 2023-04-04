@@ -41,6 +41,7 @@ jobs:
             gh pr edit ${{ github.event.pull_request.number }} --add-label $release_label
 
   update_release_draft:
+    needs: set_release_pr_label
     permissions:
       contents: write
       pull-requests: write
