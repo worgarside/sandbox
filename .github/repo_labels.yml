@@ -46,3 +46,7 @@
   - name: patch
     description: "A patch release"
     color: "FFFF00"
+
+  - name: skip-changelog
+    description: "Skip the changelog"
+    color: "FFFFFF"
