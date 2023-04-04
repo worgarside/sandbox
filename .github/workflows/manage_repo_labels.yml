@@ -7,9 +7,8 @@ on:
     branches:
       - 'main'
     paths:
-      - '.github/labels.yml'
-      - '.github/workflows/labels.yml'
-  workflow_dispatch:
+      - '.github/repo_labels.yml'
+      - '.github/workflows/manage_repo_labels.yml'
 
 jobs:
   labeler:
@@ -22,3 +21,5 @@ jobs:
 
       - name: Run Labeler
         uses: crazy-max/ghaction-github-labeler@v4
+        with:
+          yaml-file: .github/repo_labels.yml
