@@ -1,0 +1,51 @@
+---
+name: Draft New Release
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'main'
+
+jobs:
+  set_release_pr_label:
+    runs-on: ubuntu-latest
+    steps:
+        - run: |
+            new_release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
+            latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1) || "0.0.0"
+
+            if ! [[ $new_release_number =~ ^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}$ ]]
+            then
+                echo "Release number is invalid: $new_release_number"
+                exit 1
+            fi
+            
+            if [ "${new_release_number%%.*}" != "${latest_release%%.*}" ]
+            then
+                release_label="major"
+            elif [ $( cut -d '.' -f2 <<< $new_release_number) != $( cut -d '.' -f2 <<< $latest_release ) ]
+            then
+                release_label="minor"
+            elif [ "${new_release_number##*.}" != "${latest_release##*.}" ]
+            then
+                release-label="patch"
+            else
+                echo "new_release_number is $new_release_number"
+                echo "latest_release is $latest_release"
+                exit 1
+            fi
+
+            gh pr edit ${{ github.event.pull_request.number }} --add-label $release_label
+
+  update_release_draft:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
