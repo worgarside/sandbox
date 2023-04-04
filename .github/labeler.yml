@@ -1,28 +1,29 @@
+---
 appendOnly: "True"
 
 labels:
-  - label: 'bug'
+  - label: "bug"
     branch: '/bugfix\/.+/'
 
-  - label: 'dependencies'
+  - label: "dependencies"
     files:
       - '^poetry\.lock$'
       - '^Pipfile\.lock$'
 
-  - label: 'enhancement'
+  - label: "enhancement"
     branch: '/feature\/.+/'
 
-  - label: 'github-actions'
+  - label: "github-actions"
     files:
       - '^\.github/workflows/.+\.ya?ml$'
 
-  - label: 'python'
+  - label: "python"
     files:
       - '^.+\.py$'
 
-  - label: 'release'
+  - label: "release"
     branch: '/release\/.+/'
 
-  - label: 'tests'
+  - label: "tests"
     files:
-      - '^tests/.+$'
+      - "^tests/.+$"
