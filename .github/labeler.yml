@@ -1,5 +1,5 @@
 ---
-appendOnly: True
+appendOnly: "True"
 
 labels:
   - label: 'bug'
