@@ -11,40 +11,63 @@ on:
 
 jobs:
   set_release_pr_label:
+    name: Set Release PR Label
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
-        - name: Derive Label
-          run: |
-            new_release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
-            latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1) || "0.0.0"
 
-            if ! [[ $new_release_number =~ ^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}$ ]]
-            then
-                echo "Release number is invalid: $new_release_number"
-                exit 1
-            fi
-            
-            if [ "${new_release_number%%.*}" != "${latest_release%%.*}" ]
-            then
-                echo "release-label=major" >> $GITHUB_OUTPUT
-            elif [ $( cut -d '.' -f2 <<< $new_release_number) != $( cut -d '.' -f2 <<< $latest_release ) ]
-            then
-              echo "release-label=minor" >> $GITHUB_OUTPUT
-            elif [ "${new_release_number##*.}" != "${latest_release##*.}" ]
-            then
-              echo "release-label=patch" >> $GITHUB_OUTPUT
-            else
-                echo "new_release_number is $new_release_number"
-                echo "latest_release is $latest_release"
-                exit 1
-            fi
+      - name: Clone Repo
+        uses: actions/checkout@v3
 
-        - name: Apply Label
-          run: gh pr edit ${{ github.event.pull_request.number }} --add-label $release_label
+      - name: Derive Label
+        id: derive-label
+        run: |
+          new_release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
+          latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1)
+
+          if [ -z "$latest_release" ]
+          then
+            latest_release="0.0.0"
+          fi
+
+          if ! [[ $new_release_number =~ ^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}$ ]]
+          then
+              echo "Release number is invalid: $new_release_number"
+              exit 1
+          else
+            echo "new-release-number=$new_release_number" >> $GITHUB_OUTPUT
+            echo "latest-release=$latest_release" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "${new_release_number%%.*}" != "${latest_release%%.*}" ]
+          then
+              echo "release-label=major" >> $GITHUB_OUTPUT
+          elif [ $( cut -d '.' -f2 <<< $new_release_number) != $( cut -d '.' -f2 <<< $latest_release ) ]
+          then
+            echo "release-label=minor" >> $GITHUB_OUTPUT
+          elif [ "${new_release_number##*.}" != "${latest_release##*.}" ]
+          then
+            echo "release-label=patch" >> $GITHUB_OUTPUT
+          else
+              echo "new_release_number is $new_release_number"
+              echo "latest_release is $latest_release"
+              exit 1
+          fi
+
+      - name: Apply Label
+        run: gh pr edit ${{ github.event.pull_request.number }} --add-label ${{ steps.derive-label.outputs.release-label}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summarise
+        run: |
+          echo "Release Number (derived from branch): \`${{ steps.derive-label.outputs.new-release-number }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Previous Release (latest tag):  \`${{ steps.derive-label.outputs.latest-release }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Release label is \`${{ steps.derive-label.outputs.release-label }}\`" >> $GITHUB_STEP_SUMMARY
 
   update_release_draft:
+    name: Update Release Draft
     runs-on: ubuntu-latest
     needs: set_release_pr_label
     permissions:
