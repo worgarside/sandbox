@@ -16,6 +16,7 @@ jobs:
       pull-requests: write
     steps:
         - name: Derive Label
+          id: derive-label
           run: |
             new_release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
             latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1) || "0.0.0"
@@ -42,7 +43,7 @@ jobs:
             fi
 
         - name: Apply Label
-          run: gh pr edit ${{ github.event.pull_request.number }} --add-label $release_label
+          run: gh pr edit ${{ github.event.pull_request.number }} --add-label ${{ steps.derive-label.outputs.release-label}}
 
   update_release_draft:
     runs-on: ubuntu-latest
