@@ -57,9 +57,9 @@ jobs:
 
       - name: Summarise
         run: |
-          echo "Release Number (derived from branch): `${{ steps.derive-label.outputs.new-release-number }}`" >> $GITHUB_STEP_SUMMARY
-          echo "Previous Release (latest tag):  `${{ steps.derive-label.outputs.latest-release }}`" >> $GITHUB_STEP_SUMMARY
-          echo "Release label is `${{ steps.derive-label.outputs.release-label }}`" >> $GITHUB_STEP_SUMMARY
+          echo "Release Number (derived from branch): \`${{ steps.derive-label.outputs.new-release-number }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Previous Release (latest tag):  \`${{ steps.derive-label.outputs.latest-release }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Release label is \`${{ steps.derive-label.outputs.release-label }}\`" >> $GITHUB_STEP_SUMMARY
 
   update_release_draft:
     name: Update Release Draft
