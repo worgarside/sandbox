@@ -1,0 +1,5 @@
+---
+labels:
+  - label: "major"
+    branches:
+      - "master"

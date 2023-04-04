@@ -9,10 +9,9 @@ on:
     paths:
       - '.github/labels.yml'
       - '.github/workflows/labels.yml'
-  workflow_dispatch:
 
 jobs:
-  labeler:
+  manage-repo-labels:
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -22,3 +21,6 @@ jobs:
 
       - name: Run Labeler
         uses: crazy-max/ghaction-github-labeler@v4
+
+  update_pr_labels:
+    if 

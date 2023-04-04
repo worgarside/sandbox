@@ -1,5 +1,5 @@
 ---
-name: Release Drafter
+name: CI/CD
 
 # yamllint disable-line rule:truthy
 on:
@@ -9,10 +9,25 @@ on:
     branches:
       - 'main'
 
-permissions:
-  contents: read
-
 jobs:
+    set_release_label:
+        runs-on: ubuntu-latest
+        steps:
+            # Derive the release number (X.Y.Z) from the branch name (release/X.Y.Z). 
+            # Find the latest release by using the GitHub CLI to get the most recent tag,
+            # Find what the semver difference is between the current branche's release number and the latest release,
+            # and then use that to determine the release label. Add the release label value to the step output.
+            - run: |
+                release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
+                latest_release=$(gh release list --limit 1 --json tag_name --jq '.[0].tag_name')
+                echo $(semver -i minor $latest_release $release_number) >> 
+
+
+                echo "RELEASE_NUMBER=$(echo ${{ github.ref }} | cut -d'/' -f 2)" >> $GITHUB_ENV
+                echo "LATEST_RELEASE=$(gh release list --limit 1 --json tag_name --jq '.[0].tag_name')" >> $GITHUB_ENV
+                echo "RELEASE_LABEL=$(semver -i minor $LATEST_RELEASE $RELEASE_NUMBER)" >> $GITHUB_ENV
+                echo "RELEASE_LABEL" >> $GITHUB_ENV
+
   update_release_draft:
     permissions:
       contents: write
