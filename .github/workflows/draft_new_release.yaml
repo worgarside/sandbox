@@ -12,8 +12,11 @@ on:
 jobs:
   set_release_pr_label:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
-        - run: |
+        - name: Derive Label
+          run: |
             new_release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
             latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1) || "0.0.0"
 
@@ -25,27 +28,28 @@ jobs:
             
             if [ "${new_release_number%%.*}" != "${latest_release%%.*}" ]
             then
-                release_label="major"
+                echo "release-label=major" >> $GITHUB_OUTPUT
             elif [ $( cut -d '.' -f2 <<< $new_release_number) != $( cut -d '.' -f2 <<< $latest_release ) ]
             then
-                release_label="minor"
+              echo "release-label=minor" >> $GITHUB_OUTPUT
             elif [ "${new_release_number##*.}" != "${latest_release##*.}" ]
             then
-                release-label="patch"
+              echo "release-label=patch" >> $GITHUB_OUTPUT
             else
                 echo "new_release_number is $new_release_number"
                 echo "latest_release is $latest_release"
                 exit 1
             fi
 
-            gh pr edit ${{ github.event.pull_request.number }} --add-label $release_label
+        - name: Apply Label
+          run: gh pr edit ${{ github.event.pull_request.number }} --add-label $release_label
 
   update_release_draft:
+    runs-on: ubuntu-latest
     needs: set_release_pr_label
     permissions:
       contents: write
       pull-requests: write
-    runs-on: ubuntu-latest
     steps:
       - uses: release-drafter/release-drafter@v5
         env:
