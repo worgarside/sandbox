@@ -76,7 +76,7 @@ jobs:
         # yamllint enable rule:line-length
 
   set_labels:
-    name: Set (Non-Release) Labels
+    name: Set Non-Release Labels
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
