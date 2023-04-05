@@ -1,0 +1,38 @@
+---
+name: CI/CD
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+      - master
+
+jobs:
+  cancel_if_not_merged:
+    name: Cancel Workflow if Pull Request is not merged
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == false
+    steps:
+      - name: Cancel Workflow Run
+        run: gh run cancel ${{ github.run_id }} --repo ${{ github.repository }}
+
+  publish_release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Draft Release ID
+        uses: cardinalby/git-get-release-action@v1
+        id: get-draft-release-id
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          draft: true
+
+      - name: Publish Release
+        uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ steps.get-draft-release-id.outputs.id }}
