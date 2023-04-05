@@ -15,7 +15,7 @@ jobs:
     # release label
     name: Set Release Label
     runs-on: ubuntu-latest
-    if: ${{ github.base_ref == 'refs/heads/main' }}
+    if: github.base_ref == 'refs/heads/main' && startsWith(github.head_ref, 'release/')
     permissions:
       pull-requests: write
     steps:
