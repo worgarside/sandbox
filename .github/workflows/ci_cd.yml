@@ -10,7 +10,6 @@ on:
       - master
 
 jobs:
-
   cancel_if_not_merged:
     name: Cancel Workflow if Pull Request is not merged
     runs-on: ubuntu-latest
