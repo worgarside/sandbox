@@ -1,29 +1,9 @@
----
-appendOnly: "True"
-
+version: 1
 labels:
-  - label: "bug"
-    branch: '/bugfix\/.+/'
-
-  - label: "dependencies"
-    files:
-      - '^poetry\.lock$'
-      - '^Pipfile\.lock$'
-
-  - label: "enhancement"
-    branch: '/feature\/.+/'
-
-  - label: "github-actions"
-    files:
-      - '^\.github/workflows/.+\.ya?ml$'
-
-  - label: "python"
-    files:
-      - '^.+\.py$'
-
-  - label: "release"
-    branch: '/release\/.+/'
-
-  - label: "tests"
-    files:
-      - "^tests/.+$"
+  - label: "TestLabel"
+    title: ".*"
+  - label: "TestFileMatch"
+    files: 
+      - "cmd/.*.go"
+      - "pkg/.*.go"
+  
