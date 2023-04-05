@@ -17,6 +17,10 @@
     description: Pull requests that update GitHub Actions code
     color: "000000"
 
+  - name: "hotfix"
+    description: "Something isn't working and needs to be fixed ASAP"
+    color: "D73A4A"
+
   - name: major
     description: "A major release"
     color: "FF0000"
