@@ -1,5 +1,5 @@
 ---
-name: Enforce PR SemVer Label
+name: Enforce SemVer Label
 
 on:
   pull_request:
@@ -18,7 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  enforce-label:
+  enforce-semver-label:
+    name: Enforce SemVer Label
     runs-on: ubuntu-latest
     steps:
       - name: Log GitHub context
