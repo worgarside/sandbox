@@ -16,7 +16,7 @@ jobs:
     name: Draft Release
     if: |
       github.event.pull_request.draft == false &&
-      startsWith(github.head_ref, 'refs/heads/release/')
+      startsWith(github.head_ref, 'release/')
     permissions:
       contents: write
       pull-requests: write
