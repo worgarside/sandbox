@@ -23,6 +23,10 @@ jobs:
     name: Publish Release
     runs-on: ubuntu-latest
     steps:
+      - name: Get Release Tag
+        id: get-release-tag
+        run: |
+          echo "release-tag=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)" >> $GITHUB_OUTPUT
 
       - name: Log GitHub context
         env:
@@ -36,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          commitSha: ${{ github.event.pull_request.head.sha }}
+          tag: ${{ steps.get-release-tag.outputs.release-tag }}
           draft: true
 
       - name: Point Release at `main`
