@@ -35,6 +35,8 @@ jobs:
 
           if [ -z "$latest_release" ]
           then
+            echo -e "No release found, setting \`latest_release\` to 0.0.0" >> $GITHUB_STEP_SUMMARY
+            echo -e "<details><summary>List Tags Command Output</summary>\`\`\`>>> git tag -l\n$(git tag -l)\`\`\`</details>" >> $GITHUB_STEP_SUMMARY
             latest_release="0.0.0"
           fi
 
