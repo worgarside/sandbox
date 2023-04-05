@@ -62,7 +62,7 @@ jobs:
       - name: Apply Label
         run: |
           gh pr edit ${{ github.event.pull_request.number }} \
-            --add-label ${{ steps.derive-label.outputs.release-label}}
+            --add-label "${{ steps.derive-label.outputs.release-label}},release"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
