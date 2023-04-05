@@ -23,13 +23,19 @@ jobs:
     name: Publish Release
     runs-on: ubuntu-latest
     steps:
+
+      - name: Log GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+
       - name: Get Draft Release Metadata
         uses: cardinalby/git-get-release-action@v1
         id: get-draft-release-id
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          commitSha: ${{ github.event.pull_request.merge_commit_sha }}
           draft: true
 
       - name: Point Release at `main`
@@ -45,9 +51,8 @@ jobs:
         with:
           release_id: ${{ steps.get-draft-release-id.outputs.id }}
 
-      - name: Log GitHub context
+      - name: Log Release ID
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo -e "Release ID: \`${{ steps.get-draft-release-id.outputs.id }}\`"
-          echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
