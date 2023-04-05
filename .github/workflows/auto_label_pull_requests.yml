@@ -12,8 +12,11 @@ on:
       - ready_for_review
       - auto_merge_enabled
 
-jobs:
+concurrency:
+  group: auto-label-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
+jobs:
   set_labels:
     name: Set Non-Release Labels
     runs-on: ubuntu-latest
