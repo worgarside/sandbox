@@ -1,6 +1,9 @@
 ---
 name-template: '$RESOLVED_VERSION'
 tag-template: '$RESOLVED_VERSION'
+exclude-labels:
+  - release
+  - skip-changelog
 categories:
   - title: '🚀 Features'
     labels:
