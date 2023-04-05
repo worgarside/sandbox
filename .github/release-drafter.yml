@@ -40,5 +40,3 @@ exclude-contributors:
   - 'dependabot[bot]'
   - 'pre-commit-ci'
   - 'pre-commit-ci[bot]'
-
-commitish: 'refs/heads/main'
