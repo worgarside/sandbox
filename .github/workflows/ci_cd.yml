@@ -36,6 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
+          commitSha: ${{ github.event.pull_request.head.sha }}
           draft: true
 
       - name: Point Release at `main`
