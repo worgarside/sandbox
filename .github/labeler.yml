@@ -1,5 +1,6 @@
 ---
 version: 1
+appendOnly: True
 labels:
   - label: "TestLabel"
     title: ".*"
