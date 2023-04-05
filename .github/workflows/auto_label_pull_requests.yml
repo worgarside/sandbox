@@ -14,11 +14,28 @@ on:
       - auto_merge_enabled
 
 jobs:
+
+  set_labels:
+    name: Set Non-Release Labels
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: srvaroa/labeler@v1.5.0
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Log GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+
   set_release_label:
-    # If a new PR is raised against `main`, then label it with the correct
-    # release label
+    # If a new PR is raised against `main`, label it with the correct release label
     name: Set Release Label
     runs-on: ubuntu-latest
+    # This dependency is just to ensure that thejobs don't interfere with each other
+    needs: set_labels
     if: github.base_ref == 'main' && startsWith(github.head_ref, 'release/')
     permissions:
       contents: read
@@ -84,18 +101,3 @@ jobs:
           echo "Previous Release (latest tag):  \`${{ steps.derive-label.outputs.latest-release }}\`" >> $GITHUB_STEP_SUMMARY
           echo "Release label is \`${{ steps.derive-label.outputs.release-label }}\`" >> $GITHUB_STEP_SUMMARY
         # yamllint enable rule:line-length
-
-  set_labels:
-    name: Set Non-Release Labels
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    steps:
-      - uses: srvaroa/labeler@v1.5.0
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Log GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
