@@ -30,4 +30,4 @@ version-resolver:
   patch:
     labels:
       - 'patch'
-  default: patch
+  default: major
