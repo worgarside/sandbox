@@ -3,20 +3,14 @@ name: Draft Release
 
 # yamllint disable-line rule:truthy
 on:
-  pull_request:
-    types:
-      - opened
-      - ready_for_review
+  push:
     branches:
-      - 'main'
+      - develop
   workflow_dispatch:
 
 jobs:
   draft_release:
     name: Draft Release
-    if: |
-      github.event.pull_request.draft == false &&
-      startsWith(github.head_ref, 'release/')
     permissions:
       contents: write
       pull-requests: write
