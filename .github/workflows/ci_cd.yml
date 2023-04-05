@@ -10,6 +10,7 @@ on:
       - master
 
 jobs:
+
   cancel_if_not_merged:
     name: Cancel Workflow if Pull Request is not merged
     runs-on: ubuntu-latest
@@ -22,7 +23,7 @@ jobs:
     name: Publish Release
     runs-on: ubuntu-latest
     steps:
-      - name: Get Draft Release ID
+      - name: Get Draft Release Metadata
         uses: cardinalby/git-get-release-action@v1
         id: get-draft-release-id
         env:
@@ -31,9 +32,22 @@ jobs:
           commitSha: ${{ github.event.pull_request.merge_commit_sha }}
           draft: true
 
+      - name: Point Release at `main`
+        run: |
+          gh release edit ${{ steps.get-draft-release-id.outputs.tag_name }} \
+           --target refs/heads/main \
+           --repo ${{ github.repository }}
+
       - name: Publish Release
         uses: eregon/publish-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ steps.get-draft-release-id.outputs.id }}
+
+      - name: Log GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo -e "Release ID: \`${{ steps.get-draft-release-id.outputs.id }}\`"
+          echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY

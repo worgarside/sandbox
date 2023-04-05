@@ -13,10 +13,19 @@ on:
       - ready_for_review
       - auto_merge_enabled
 
+concurrency:
+  group: enforce-label-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   enforce-label:
     runs-on: ubuntu-latest
     steps:
+      - name: Log GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+
       - uses: yogevbd/enforce-label-action@2.1.0
         with:
           REQUIRED_LABELS_ANY: "major,minor,patch,hotfix,non-functional"
