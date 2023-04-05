@@ -13,8 +13,6 @@ on:
       - ready_for_review
       - auto_merge_enabled
 
-
-
 jobs:
   set_release_label:
     # If a new PR is raised against `main`, then label it with the correct
@@ -90,3 +88,8 @@ jobs:
       - uses: srvaroa/labeler@v1.5.0
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Log GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
