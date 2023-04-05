@@ -27,19 +27,20 @@ jobs:
       - name: Clone Repo
         uses: actions/checkout@v3
 
+      - name: 'Get Previous Tag'
+        id: get-previous-tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          fallback: '0.0.0'
+
       - name: Derive Label
         id: derive-label
         # yamllint disable rule:line-length
         run: |
           new_release_number=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
-          latest_release=$(git tag -l | grep -E "^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}\$" | sort -V | tail -1)
-
-          if [ -z "$latest_release" ]
-          then
-            echo -e "No release found, setting \`latest_release\` to \`0.0.0\`" >> $GITHUB_STEP_SUMMARY
-            echo -e "<details><summary>List Tags Command Output</summary>\`\`\`\n>>> git tag -l\n$(git tag -l)\n\`\`\`</details>" >> $GITHUB_STEP_SUMMARY
-            latest_release="0.0.0"
-          fi
+          latest_release=${{ steps.get-previous-tag.outputs.tag }}
 
           if ! [[ $new_release_number =~ ^[0-9]{1,2}\.[0-9]{1,4}\.[0-9]{1,4}$ ]]
           then
