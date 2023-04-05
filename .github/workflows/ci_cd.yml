@@ -26,10 +26,7 @@ jobs:
       - name: Get Release Tag
         id: get-release-tag
         run: |
-          echo "escaped-tag=$(echo $GITHUB_HEAD_REF | \
-            cut -d'/' -f2 | \
-            sed -r 's/\./\\\./g' \
-           )" >> $GITHUB_OUTPUT
+          echo "release-tag=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)" >> $GITHUB_OUTPUT
 
       - name: Log GitHub context
         env:
@@ -43,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          releaseNameRegEx: ^.*${{ steps.get-release-tag.outputs.escaped-tag }}.*$
+          releaseName: ^.*${{ steps.get-release-tag.outputs.release-tag }}.*$
           draft: true
 
       - name: Point Release at `main`
