@@ -13,6 +13,10 @@ on:
       - ready_for_review
       - auto_merge_enabled
 
+concurrency:
+  group: enforce-label-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   enforce-label:
     runs-on: ubuntu-latest
