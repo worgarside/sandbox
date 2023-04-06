@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Cancel Workflow Run
         run: gh run cancel ${{ github.run_id }} --repo ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_release:
     name: Publish Release
@@ -39,6 +41,8 @@ jobs:
           echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Point Release at `main`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release edit ${{ steps.get-release-metadata.outputs.release-tag }} \
            --target refs/heads/main \
