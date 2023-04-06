@@ -60,3 +60,12 @@ jobs:
         uses: eregon/publish-release@v1
         with:
           release_id: ${{ steps.get-release-metadata.outputs.release-id }}
+
+      - name: Clone Repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Delete Release Branch
+        run: git push origin --delete $GITHUB_HEAD_REF
