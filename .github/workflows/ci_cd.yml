@@ -22,10 +22,15 @@ jobs:
     name: Publish Release
     runs-on: ubuntu-latest
     steps:
-      - name: Get Release Tag
-        id: get-release-tag
+      - name: Get Release Metadata
+        id: get-release-metadata
         run: |
-          echo "release-tag=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)" >> $GITHUB_OUTPUT
+          release_tag=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
+          echo "release-id=$(gh release view $release_tag \
+          --json id \
+          --repo ${{ github.repository }} \
+          --jq '.id')" >> $GITHUB_OUTPUT
+          echo "release-tag=$release_tag" >> $GITHUB_OUTPUT
 
       - name: Log GitHub context
         env:
@@ -33,18 +38,9 @@ jobs:
         run: |
           echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
-      - name: Get Draft Release Metadata
-        uses: cardinalby/git-get-release-action@v1
-        id: get-draft-release-id
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          releaseName: ${{ steps.get-release-tag.outputs.release-tag }}
-          draft: true
-
       - name: Point Release at `main`
         run: |
-          gh release edit ${{ steps.get-draft-release-id.outputs.tag_name }} \
+          gh release edit ${{ steps.get-release-metadata.outputs.release-tag }} \
            --target refs/heads/main \
            --repo ${{ github.repository }}
 
@@ -53,10 +49,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ steps.get-draft-release-id.outputs.id }}
+          release_id: ${{ steps.get-release-metadata.outputs.release-id }}
 
       - name: Log Release ID
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo -e "Release ID: \`${{ steps.get-draft-release-id.outputs.id }}\`"
+          echo -e "Release ID: \`${{ steps.get-release-metadata.outputs.release-id }}\`"
