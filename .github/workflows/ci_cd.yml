@@ -23,6 +23,12 @@ jobs:
   publish_release:
     name: Publish Release
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+      deployments: write
+      pages: write
     steps:
       - name: Get Release Metadata
         id: get-release-metadata
@@ -38,25 +44,15 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
+          echo -e "Release ID: \`${{ steps.get-release-metadata.outputs.release-id }}\`"
           echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Point Release at `main`
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release edit ${{ steps.get-release-metadata.outputs.release-tag }} \
            --target refs/heads/main \
            --repo ${{ github.repository }}
-
       - name: Publish Release
         uses: eregon/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ steps.get-release-metadata.outputs.release-id }}
-
-      - name: Log Release ID
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo -e "Release ID: \`${{ steps.get-release-metadata.outputs.release-id }}\`"
