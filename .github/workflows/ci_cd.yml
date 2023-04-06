@@ -37,7 +37,7 @@ jobs:
         uses: cardinalby/git-get-release-action@v1
         id: get-draft-release-id
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseName: ^.*${{ steps.get-release-tag.outputs.release-tag }}.*$
           draft: true
