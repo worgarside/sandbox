@@ -38,7 +38,7 @@ jobs:
            --json apiUrl \
            --repo ${{ github.repository }} \
            --jq '.apiUrl' | \
-           cut -d '/' -f7 \
+           cut -d '/' -f8 \
           )" >> $GITHUB_OUTPUT
           echo "release-tag=$release_tag" >> $GITHUB_OUTPUT
 
