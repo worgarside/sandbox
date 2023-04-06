@@ -33,11 +33,13 @@ jobs:
       - name: Get Release Metadata
         id: get-release-metadata
         run: |
-          release_tag=$(echo $GITHUB_HEAD_REF | cut -d'/' -f2)
+          release_tag=$(echo $GITHUB_HEAD_REF | cut -d '/' -f2)
           echo "release-id=$(gh release view $release_tag \
-          --json id \
-          --repo ${{ github.repository }} \
-          --jq '.id')" >> $GITHUB_OUTPUT
+           --json apiUrl \
+           --repo ${{ github.repository }} \
+           --jq '.apiUrl' | \
+           cut -d '/' -f7 \
+          )" >> $GITHUB_OUTPUT
           echo "release-tag=$release_tag" >> $GITHUB_OUTPUT
 
       - name: Log GitHub context
@@ -45,6 +47,7 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo -e "Release ID: \`${{ steps.get-release-metadata.outputs.release-id }}\`"
+          echo -e "Tag: \`${{ steps.get-release-metadata.outputs.release-tag }}\`"
           echo -e "\`\`\`json\n$GITHUB_CONTEXT\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Point Release at `main`
@@ -52,6 +55,7 @@ jobs:
           gh release edit ${{ steps.get-release-metadata.outputs.release-tag }} \
            --target refs/heads/main \
            --repo ${{ github.repository }}
+
       - name: Publish Release
         uses: eregon/publish-release@v1
         with:
