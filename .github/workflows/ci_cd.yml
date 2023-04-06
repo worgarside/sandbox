@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseName: ^.*${{ steps.get-release-tag.outputs.release-tag }}.*$
+          releaseName: ${{ steps.get-release-tag.outputs.release-tag }}
           draft: true
 
       - name: Point Release at `main`
