@@ -1,5 +1,5 @@
 ---
-name: Auto-Label PRs
+name: Manage PR Labels
 
 # yamllint disable-line rule:truthy
 on:
@@ -15,7 +15,7 @@ on:
       - auto_merge_enabled
 
 concurrency:
-  group: auto-label-${{ github.event.pull_request.number }}
+  group: manage-labels-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
