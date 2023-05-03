@@ -30,8 +30,9 @@ jobs:
         env:
           PR_LABELS_JSON: ${{ toJson(github.event.pull_request.labels.*.name) }}
           PR_LABELS_COMMA: ${{ join(github.event.pull_request.labels.*.name) }}
-          PR_LABELS_NEWLINE: ${{ join(github.event.pull_request.labels.*.name, '\n') }}
+          PR_LABELS_NEWLINE: ${{ join(github.event.pull_request.labels.*.name, '\\n') }}
         run: |
           echo "PR_LABELS_JSON: $PR_LABELS_JSON"
           echo "PR_LABELS_COMMA: $PR_LABELS_COMMA"
           echo "PR_LABELS_NEWLINE: $PR_LABELS_NEWLINE"
+          echo "$PR_LABELS_NEWLINE" | grep -o '^en.*'
