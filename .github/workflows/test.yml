@@ -35,4 +35,8 @@ jobs:
           echo "PR_LABELS_JSON: $PR_LABELS_JSON"
           echo "PR_LABELS_COMMA: $PR_LABELS_COMMA"
           echo "PR_LABELS_NEWLINE: $PR_LABELS_NEWLINE"
-          echo "$PR_LABELS_NEWLINE" | grep -o '^en.*'
+          echo "$PR_LABELS_COMMA" |
+            tr ',' '\n' |
+            grep -o 'bot:.*' |
+            tr '\n' ',' |
+            sed 's/,$//'
