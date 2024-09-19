@@ -1,0 +1,20 @@
+---
+name: Run step on check suite failure
+
+on:
+  check_suite:
+    types:
+      - completed
+
+jobs:
+  run_on_failure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Event
+        env:
+          INPUTS: ${{ toJson(github) }}
+        run: |
+          echo -e "\`\`\`json\n$INPUTS\n\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run a step if the check suite failed
+        run: echo "The check suite has failed. Running the necessary steps."
