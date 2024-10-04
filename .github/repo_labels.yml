@@ -29,6 +29,10 @@
     description: "A minor release"
     color: "FFA500"
 
+  - name: non-functional
+    description: "A non-functional change"
+    color: "FFFFFF"
+
   - name: patch
     description: "A patch release"
     color: "FFFF00"
